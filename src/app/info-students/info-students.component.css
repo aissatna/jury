@@ -1,0 +1,24 @@
+.demo-tab-group {
+  border: 1px solid #e8e8e8;
+}
+
+.demo-tab-content {
+  padding: 16px;
+}
+
+#CharContainer {
+  /* min-width: 310px;  */
+  height: 550px;
+  width: 550px;
+  margin: 0 auto auto auto
+}
+
+.UE {
+  height: auto;
+  margin: 0 auto;
+}
+
+.formUE {
+  width: 50%;
+  margin: 0 auto;
+}

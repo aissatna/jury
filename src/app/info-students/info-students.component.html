@@ -1,0 +1,11 @@
+<div class="UE">
+  <form class="formUE">
+    <mat-form-field>
+      <input matInput placeholder="UE" value="UE" name="UE" [(ngModel)]="UE">
+    </mat-form-field>
+    <button (click)="displayChart();window.location.reload(false)">Start</button>
+  </form>
+
+</div>
+
+<div id="CharContainer" [chart]="chart"></div>
