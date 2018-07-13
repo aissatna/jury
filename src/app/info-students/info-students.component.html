@@ -3,9 +3,15 @@
     <mat-form-field>
       <input matInput placeholder="UE" value="UE" name="UE" [(ngModel)]="UE">
     </mat-form-field>
-    <button (click)="displayChart();window.location.reload(false)">Start</button>
+    <button mat-raised-button (click)="displayChart()">Start</button>
   </form>
-
 </div>
 
-<div id="CharContainer" [chart]="chart"></div>
+<div *ngIf="show">
+  <div id="CharContainer" [chart]="chart"></div>
+  <div class="filtreAffichage">
+    <button mat-raised-button (click)="ShowNoteCC()">CC</button>
+    <button mat-raised-button (click)="ShowNoteET()">ET</button>
+    <button mat-raised-button (click)="ShowNoteMOY()">MOY</button>
+  </div>
+</div>

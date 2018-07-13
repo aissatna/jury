@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, asNativeElements } from '@angular/core';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { Chart } from 'angular-highcharts';
+
 @Component({
   selector: 'app-info-students',
   templateUrl: './info-students.component.html',
@@ -9,6 +10,7 @@ import { Chart } from 'angular-highcharts';
 
 
 export class InfoStudentsComponent implements OnInit {
+
   chart: Chart;
   itemsData: AngularFireList<any[]>;
   itemsDataStudent: AngularFireList<any[]>;
@@ -18,6 +20,7 @@ export class InfoStudentsComponent implements OnInit {
   dataChart = [];
   UE: string;
   ImageURL: string;
+  public show: boolean = false;
 
 
   constructor(public af: AngularFireDatabase) {
@@ -56,24 +59,25 @@ export class InfoStudentsComponent implements OnInit {
   displayChart() {
     this.dataChart.splice(0, this.dataChart.length)
     this.dataNotes.forEach(e => {
-      console.log(e.ID)
-      this.dataChart.push([e[this.UE].CC, e[this.UE].ET, this.getImageUrl(e.ID), e.ID]);
+
+      this.dataChart.push([e[this.UE.toUpperCase()].CC, e[this.UE.toUpperCase()].ET, this.getImageUrl(e.ID), e.ID]);
     });
     this.chartfunction(this.dataChart)
 
+    /* Inversion de la valeur si c'est la première fois qu'on appuie sur le bouton Start*/
+    if (!this.show) { this.show = !this.show; }
 
 
     /*********** Chart ******************************** */
   }
-  chartfunction(data) {
-    
+  chartfunction(dataChart) {
     let chart = new Chart({
       chart: {
         type: 'scatter',
-
       },
+
       title: {
-        text: 'Les Notes ' + this.UE
+        text: 'Les Notes ' + this.UE.toUpperCase()
       },
       yAxis: {
         title: {
@@ -92,41 +96,80 @@ export class InfoStudentsComponent implements OnInit {
         tickInterval: 2
 
       },
-     
       tooltip: {
+
         useHTML: true,
         formatter: function () {
-          for (var i = 0; i < data.length; i++) {
-            if (this.x == data[i][0] && this.y == data[i][1]) {
-              var s = ' <img src="' + data[i][2] + '" height="42" width="42">  ';
+          for (var i = 0; i < dataChart.length; i++) {
+            if (this.x == dataChart[i][0] && this.y == dataChart[i][1]) {
+              var s = ' <img src="' + dataChart[i][2] + '" height="42" width="42">';
             }
           }
           s += '<br/>' + 'CC: ' +
             this.x + '<br/>' + 'ET: ' + this.y;
           return s;
         },
-        shared: true
+
       },
 
-      series: [
-          { 
 
-            type: 'line',
-            data: [[0, 10], [10, 0]]
-        },
+      series: [
 
         {
-          name: this.UE,
-          data: data
+          name: this.UE.toLocaleUpperCase(),
+          data: dataChart,
+
         }],
-        
-        
+
+
     });
-    chart.addSerie;
+
     this.chart = chart;
 
   }
+  // Classer les étudiants par rapports aux notes de CC 
+  ShowNoteCC() {
+    this.chart.ref.update({
+      plotOptions: {
+        scatter: {
+          zoneAxis: 'x',
+          zones: [{
+            value: 10,
+            color: 'red'
+          }, {
+            color: 'green'
+          }]
+        }
+      },
+    })
+
+  };
+
+  // Classer les étudiants par rapports aux notes de ET
+  ShowNoteET() {
+
+    this.chart.ref.update({
+      plotOptions: {
+        scatter: {
+          zoneAxis: 'y',
+          zones: [{
+            value: 10,
+            color: 'red'
+          }, {
+            color: 'green'
+          }]
+        }
+      },
+    })
+
+  };
+  ShowNoteMOY(){
+
+
+  
+  }
 
 }
+
 
 
